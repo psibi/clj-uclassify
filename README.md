@@ -1,13 +1,15 @@
 # clj-uclassify
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure uClassify API library.
+
+Currently in development stage.
 
 ## Usage
 
-FIXME
+Not reached that stage yet!
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Sibi
 
 Distributed under the Eclipse Public License, the same as Clojure.
