@@ -10,6 +10,7 @@
 (def classifer-name (str (System/currentTimeMillis)))
 
 (deftest create-classifier-test
-  (testing "Creating Classifier test"
+  (testing "Classifier test"
     (is (= (create-classifier api-keys classifer-name) true) "Create New Classifer")
+    (is (= (add-class api-keys classifer-name '("class1" "class2")) true) "Creates some new class labels in Classifier")
     (is (thrown? Throwable (create-classifier api-keys classifer-name)) "Creating Existing classifier")))
