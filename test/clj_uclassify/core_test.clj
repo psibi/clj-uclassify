@@ -1,6 +1,6 @@
 (ns clj-uclassify.core-test
   (:require [clojure.test :refer :all]
-            [clj-uclassify.core :refer :all]))
+            [clj-uclassify.uclassify :refer :all]))
 
 (deftest canary-test
   (testing "Canary test"
