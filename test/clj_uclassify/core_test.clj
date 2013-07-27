@@ -13,6 +13,7 @@
   (testing "Classifier test"
     (is (= (create-classifier api-keys classifer-name) true) "Create New Classifer")
     (is (= (add-class api-keys classifer-name '("class1" "class2")) true) "Creates some new class labels in Classifier")
+    (is (= (remove-class api-keys classifer-name '("class1" "class2")) true) "Removes the created class labels")
     (is (thrown? Throwable (create-classifier api-keys classifer-name)) "Creating Existing classifier")
     (is (= (remove-classifier api-keys classifer-name) true) "Removes created classifier")
     ))
