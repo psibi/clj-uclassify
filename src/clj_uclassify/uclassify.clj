@@ -33,6 +33,20 @@
        (xml/emit-str final-xml)))
     (throw (Throwable. "API Key not found"))))
 
+(defn remove-classifier
+  "Removes pre-existing classifier"
+  [keys classifier]
+  (if (check-keys keys)
+    (post-request
+     (xml/emit-str
+      (zip/root
+       (zip/append-child
+        (zip/xml-zip uclassify)
+        (make-xml-node :writeCalls {:writeApiKey (keys :write-key) :classifierName classifier}
+                       (make-xml-node :remove {:id "Remove"}))))))
+    (throw (Throwable. "API key not found"))))
+
+
 (defn append-elements
   "Pass an xml-node and an sequence of xml-node, it will return the appended xml-node"
   [xml-node xml-nodes]
