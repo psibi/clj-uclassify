@@ -13,8 +13,8 @@
       false
       true)))
 
-(def akeys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-(akeys :read-key)
+;(def akeys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
+;(akeys :read-key)
 
 (defn make-xml-node
   ([node attrs] (xml/element node attrs))
@@ -56,3 +56,12 @@
         zip-str
         get-response
         check-response))))
+
+(defn xml-append-elements
+  "Pass an xml-node and an sequence of xml-node, it will return the appended xml-node"
+  [xml-node xml-nodes]
+  (zip/root
+   (reduce #(zip/append-child %1 %2) (zip/xml-zip xml-node) xml-nodes)))
+
+(defn index-of [item coll]
+  (count (take-while (partial not= item) coll)))
