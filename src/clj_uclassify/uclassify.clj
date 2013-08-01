@@ -97,8 +97,7 @@ TODO: Return response properly instead of true"
         texts-tag (make-xml-node :texts {} textbase64-tag)
         write-calls (make-xml-node :writeCalls
                                    {:writeApiKey (keys :write-key) :classifierName classifier}
-                                   train-tag)
-        ]
+                                   train-tag)]
     (post-request
      (xml/emit-str
       (xml-append-elements uclassify (list texts-tag write-calls))))))
