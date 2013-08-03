@@ -1,7 +1,8 @@
 (ns clj-uclassify.uclassify
   (:require [clj-uclassify.core :refer :all]
             [clojure.data.xml :as xml]
-            [clojure.zip :as zip])
+            [clojure.zip :as zip]
+            [clojure.data.zip.xml :as x])
   (:use [clojure.string :only (join)]
         [clojure.data.codec.base64 :only (encode)]))
 
@@ -65,12 +66,10 @@
        (xml/emit-str final-xml)))
     (throw (Throwable. "API Key not found"))))
 
-
 ;(get-information api-keys "some_clas")
 
 (defn get-information
-  "Returns information about the classifier
-TODO: Return response properly instead of true"
+  "Returns information about the classifier."
   [keys classifier]
   (let [info-tag (make-xml-node :getInformation
                                 {:id "GetInformation"
@@ -80,9 +79,32 @@ TODO: Return response properly instead of true"
                                      info-tag)
         final-xml (zip/root (zip/insert-child
                              (zip/xml-zip uclassify)
-                             (zip/xml-zip read-calls)))]
-    (post-request
-     (xml/emit-str final-xml))))
+                             (zip/xml-zip read-calls)))
+        uclassify-response (raw-post-request
+                            (xml/emit-str final-xml))
+        resp-class-name (x/xml-> uclassify-response
+                                 :readCalls
+                                 :getInformation
+                                 :classes
+                                 :classInformation
+                                 (x/attr :className))]
+    (if (check-response
+         (get-response uclassify-response))
+      (if (empty? resp-class-name)
+        ()
+        (list resp-class-name
+              (x/xml-> uclassify-response
+                       :readCalls :getInformation :classes
+                       :classInformation :uniqueFeatures x/text)
+              (x/xml-> uclassify-response
+                       :readCalls :getInformation :classes
+                       :classInformation :totalCount x/text)
+        ))
+      false ;Will never reach here
+      )))
+
+;;(def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
+;(create-classifier api-keys "test_classifier")
 
 (defn train
   "Trains the classifier on text for a specified class"
@@ -101,8 +123,5 @@ TODO: Return response properly instead of true"
     (post-request
      (xml/emit-str
       (xml-append-elements uclassify (list texts-tag write-calls))))))
-
-;(def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-;(train api-keys '("hi" "bye") "male" "gender_classifier")
 
 
