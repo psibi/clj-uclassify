@@ -57,6 +57,14 @@
         get-response
         check-response))))
 
+(defn raw-post-request [xml-data]
+  (with-open [client (http/create-client)] ; Create client
+  (let [response (http/POST client "http://api.uclassify.com" :body xml-data)] ; request http resource
+    (-> response
+        http/await     ; wait for response to be received
+        http/string    ; read body of response as string
+        zip-str))))
+
 (defn xml-append-elements
   "Pass an xml-node and an sequence of xml-node, it will return the appended xml-node"
   [xml-node xml-nodes]
