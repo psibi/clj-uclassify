@@ -15,6 +15,7 @@
     (is (= (add-class api-keys classifer-name '("class1" "class2")) true) "Creates some new class labels in Classifier")
     (is (= (get-information api-keys classifer-name) '(("class1" "class2") ("0" "0") ("0" "0"))) "get information about classifier")
     (is (= (train api-keys '("I like cosmetic" "That is so hot") "class1" classifer-name) true) "Train a classifier")
+    (is (= (untrain api-keys '("I like cosmetic" "That is so hot") "class1" classifer-name) true) "UnTrain a classifier")
     (is (= (remove-class api-keys classifer-name '("class1" "class2")) true) "Removes the created class labels")
     (is (thrown? Throwable (create-classifier api-keys classifer-name)) "Creating Existing classifier")
     (is (= (remove-classifier api-keys classifer-name) true) "Removes created classifier")))
