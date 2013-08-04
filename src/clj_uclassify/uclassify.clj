@@ -66,8 +66,6 @@
        (xml/emit-str final-xml)))
     (throw (Throwable. "API Key not found"))))
 
-;(get-information api-keys "some_clas")
-
 (defn get-information
   "Returns information about the classifier."
   [keys classifier]
@@ -103,9 +101,6 @@
       false ;Will never reach here
       )))
 
-;;(def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-;(create-classifier api-keys "test_classifier")
-
 (defn train
   "Trains the classifier on text for a specified class"
   [keys texts class-name classifier]
@@ -124,4 +119,25 @@
      (xml/emit-str
       (xml-append-elements uclassify (list texts-tag write-calls))))))
 
+(defn untrain
+  "Trains the classifier on text for a specified class"
+  [keys texts class-name classifier]
+  (let [textbase64-tag (map #(make-xml-node :textBase64
+                                       {:id (str "Text" (str (index-of % texts)))}
+                                       (String. (encode (.getBytes %)) )) texts)
+        train-tag (map #(make-xml-node :untrain
+                                       {:id (str "Untrain" %) :className class-name
+                                        :textId (str "Text" %) })
+                       (range (count texts)))
+        texts-tag (make-xml-node :texts {} textbase64-tag)
+        write-calls (make-xml-node :writeCalls
+                                   {:writeApiKey (keys :write-key) :classifierName classifier}
+                                   train-tag)]
+    (post-request
+     (xml/emit-str
+      (xml-append-elements uclassify (list texts-tag write-calls))))))
 
+;; (def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
+;; (create-classifier api-keys "test_classifier")
+;; (add-class api-keys "test_classifier" '("man" "woman"))
+;; (remove-classifier api-keys "test_classifier")
