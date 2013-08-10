@@ -1,4 +1,4 @@
-# clj-uclassify
+# clj-uclassify [![Build Status](https://travis-ci.org/psibi/clj-uclassify.png?branch=master)](https://travis-ci.org/psibi/clj-uclassify)
 
 A Clojure uClassify API library.
 
