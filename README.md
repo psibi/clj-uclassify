@@ -12,4 +12,5 @@ Not reached that stage yet!
 
 Copyright © 2013 Sibi
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under GNU General Public License, Version 3. See LICENSE
+file for more details.
