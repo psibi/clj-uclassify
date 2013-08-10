@@ -197,8 +197,3 @@
 ;; (remove-classifier api-keys "test_classifier")
 ;; (def mm (classify api-keys '("hi" "bye") "test_classifier"))
 
-(defn- readable-list
-  [classify-list]
-  (let [len (/ (count (second classify-list)) (count (first classify-list)))]
-    (cons (first classify-list)
-          (partition len (second classify-list)))))
