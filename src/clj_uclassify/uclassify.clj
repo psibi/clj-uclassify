@@ -137,6 +137,12 @@
      (xml/emit-str
       (xml-append-elements uclassify (list texts-tag write-calls))))))
 
+(defn- readable-list
+  [classify-list]
+  (let [len (/ (count (second classify-list)) (count (first classify-list)))]
+    (cons (first classify-list)
+          (partition len (second classify-list)))))
+
 (defn classify
   "Sends a text to a classifier and returns a classification"
   [keys texts classifier & user-name]
