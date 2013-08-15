@@ -189,11 +189,56 @@
                       :classification :class
                       (x/attr :p)))))
        false ;; Will never reach here
+       )))
+
+(defn classify-keywords
+  "Sends a text to a classifier and returns a classification and
+   relevant keywords for each class"
+  [keys texts classifier & user-name]
+  (let [textbase64-tag (map #(make-xml-node :textBase64
+                                       {:id (str "Text" (str (index-of % texts)))}
+                                       (String. (encode (.getBytes %)) )) texts)
+        texts-tag (make-xml-node :texts {} textbase64-tag)
+        user-attribute (if (> (count user-name) 0)
+                         { :username (first user-name) })
+        classify-tag (if (= (count user-name) 0)
+                       (map #(make-xml-node :classifyKeywords
+                                            {:id (str "Classify" %)
+                                             :classifierName classifier
+                                             :textId (str "Text" %)
+                                             })
+                            (range (count texts)))
+                       (map #(make-xml-node :classifyKeywords
+                                            {:id (str "Classify" %)
+                                             :classifierName classifier
+                                             :textId (str "Text" %)
+                                             :username (first user-name)})
+                            (range (count texts))))
+        read-calls (make-xml-node :readCalls
+                                     {:readApiKey (keys :read-key)}
+                                     classify-tag)
+        uclassify-response (raw-post-request
+                            (xml/emit-str
+                             (xml-append-elements uclassify
+                                                  (list texts-tag read-calls))))]
+    (if (check-response
+         (get-response uclassify-response))
+      (readable-list
+       (list
+        (x/xml-> uclassify-response
+                 :readCalls :classifyKeywords
+                 :classification (x/attr :textCoverage))
+        (map vector
+             (x/xml-> uclassify-response
+                      :readCalls :classifyKeywords
+                      :classification :class
+                      (x/attr :className))
+             (x/xml-> uclassify-response
+                      :readCalls :classifyKeywords
+                      :classification :class
+                      (x/attr :p))
+             (x/xml-> uclassify-response
+                      :readCalls :classifyKeywords
+                      :keywords :class x/text))))
+      false
       )))
-
-;; (def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-;; (create-classifier api-keys "test_classifier")
-;; (add-class api-keys "test_classifier" '("man" "woman"))
-;; (remove-classifier api-keys "test_classifier")
-;; (def mm (classify api-keys '("hi" "bye") "test_classifier"))
-
