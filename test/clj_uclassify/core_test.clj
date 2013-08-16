@@ -10,7 +10,7 @@
 (def classifer-name (str (System/currentTimeMillis)))
 
 (deftest create-classifier-test
-  (testing "Classifier test"
+  (testing "API test with two classes"
     (is (= (create-classifier api-keys classifer-name) true) "Create New Classifer")
     (is (= (add-class api-keys classifer-name '("class1" "class2")) true) "Creates some new class labels in Classifier")
     (is (= (get-information api-keys classifer-name) '(("class1" "class2") ("0" "0") ("0" "0"))) "get information about classifier")
@@ -27,3 +27,19 @@
     (is (= (remove-class api-keys classifer-name '("class1" "class2")) true) "Removes the created class labels")
     (is (thrown? Throwable (create-classifier api-keys classifer-name)) "Creating Existing classifier")
     (is (= (remove-classifier api-keys classifer-name) true) "Removes created classifier")))
+
+(def another-classifier (str classifer-name \a))
+
+(deftest another-classifier-test
+  (testing "Another API test with three classes"
+    (is (= (create-classifier api-keys another-classifier) true) "Create New Classifer")
+    (is (= (add-class api-keys another-classifier '("class1" "class2" "class3")) true) "Creates some new class labels in Classifier")
+    (is (= (get-information api-keys another-classifier) '(("class1" "class2" "class3") ("0" "0" "0") ("0" "0" "0"))) "get information about classifier")
+    (is (= (classify api-keys '("hi" "bye") another-classifier) '(("0" "0") (["class1" "0.333333"] ["class2" "0.333333"] ["class3" "0.333333"]) (["class1" "0.333333"] ["class2" "0.333333"] ["class3" "0.333333"])))
+        "Classify the passed texts")
+    (is (= (classify-keywords api-keys '("hi" "bye") another-classifier) '(("0" "0") (["class1" "0.333333" ""] ["class2" "0.333333" ""] ["class3" "0.333333" ""]) (["class1" "0.333333" ""] ["class2" "0.333333" ""] ["class3" "0.333333" ""]))))
+    (is (= (train api-keys '("I like cosmetic" "That is so hot") "class1" another-classifier) true) "Train a classifier")
+    (is (= (untrain api-keys '("I like cosmetic" "That is so hot") "class1" another-classifier) true) "UnTrain a classifier")
+    (is (= (remove-class api-keys another-classifier '("class1" "class2")) true) "Removes the created class labels")
+    (is (thrown? Throwable (create-classifier api-keys another-classifier)) "Creating Existing classifier")
+    (is (= (remove-classifier api-keys another-classifier) true) "Removes created classifier")))
