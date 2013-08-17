@@ -11,10 +11,24 @@ web service.
 can easily create your own text classifiers. You can also directly use
 classifiers that are shared by the community.
 
+## Installation
+
+With Leiningen add clj-uclassify dependency to your project.clj file
+
+    [psibi/clj-uclassify "0.1.2"]
+
+With Maven:
+
+    <dependency>
+        <groupId>psibi</groupId>
+        <artifactId>clj-uclassify</artifactId>
+        <version>0.1.2</version>
+    </dependency>
+
 ## API Usage Documentation and Examples
 
 See
-[here](https://github.com/psibi/clj-uclassify/blob/master/doc/intro.md)
+[here](https://github.com/psibi/clj-uclassify/blob/master/doc/intro.md).
 
 ## Bug Report
 
