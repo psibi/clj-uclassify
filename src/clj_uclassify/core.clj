@@ -1,4 +1,6 @@
-(ns clj-uclassify.core
+(ns #^{:doc "Core of clj-uclassify. This namespace is used by the
+             API files. It doesn't provide anything useful to users."}
+    clj-uclassify.core
   (:require [http.async.client :as http]
             [clojure.data.xml :as xml]
             [clojure.zip :as zip]
@@ -12,9 +14,6 @@
     (if (some #(nil? %) keys)
       false
       true)))
-
-;(def akeys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-;(akeys :read-key)
 
 (defn make-xml-node
   ([node attrs] (xml/element node attrs))

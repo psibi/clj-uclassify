@@ -1,10 +1,11 @@
-(ns clj-uclassify.uclassify
-  (:require [clj-uclassify.core :refer :all]
-            [clojure.data.xml :as xml]
+(ns #^{:doc "Implements all the API functions"}
+    clj-uclassify.uclassify
+  (:require [clojure.data.xml :as xml]
             [clojure.zip :as zip]
             [clojure.data.zip.xml :as x])
   (:use [clojure.string :only (join)]
-        [clojure.data.codec.base64 :only (encode)]))
+        [clojure.data.codec.base64 :only (encode)]
+        [clj-uclassify.core]))
 
 (defn create-classifier
   "Creates a new classifier"
