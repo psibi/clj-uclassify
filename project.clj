@@ -1,4 +1,4 @@
-(defproject clj-uclassify "0.1.1"
+(defproject psibi/clj-uclassify "0.1.2"
   :description "uClassify API Library"
   :url "https://github.com/psibi/clj-uclassify"
   :license {:name "GNU General Public License Version 3"
