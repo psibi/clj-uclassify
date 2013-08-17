@@ -6,7 +6,7 @@
             [clojure.data.zip.xml :as x]))
 
 (defn check-keys?
-  "Checks for key, if nil throw exception"
+  "Predicate for checking the presence of api keys"
   [{rkey :read-key wkey :write-key}]
   (let [keys (list rkey wkey)]
     (if (some #(nil? %) keys)
