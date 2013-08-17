@@ -6,8 +6,8 @@
   (testing "Canary test"
     (is (= 0 0))))
 
-(def api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
-(def classifer-name (str (System/currentTimeMillis)))
+(def ^:private api-keys {:read-key "aD02ApbU29kNOG2xezDGXPEIck" :write-key "fsqAft7Hs29BgAc1AWeCIWdGnY"})
+(def ^:private classifer-name (str (System/currentTimeMillis)))
 
 (deftest create-classifier-test
   (testing "API test with two classes"
@@ -28,7 +28,7 @@
     (is (thrown? Throwable (create-classifier api-keys classifer-name)) "Creating Existing classifier")
     (is (= (remove-classifier api-keys classifer-name) true) "Removes created classifier")))
 
-(def another-classifier (str classifer-name \a))
+(def ^:private another-classifier (str classifer-name \a))
 
 (deftest another-classifier-test
   (testing "Another API test with three classes"
