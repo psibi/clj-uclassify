@@ -6,75 +6,76 @@
   (:use [clojure.string :only (join)]
         [clojure.data.codec.base64 :only (encode)]))
 
-(defn create-classifier [keys classifier]
-  (if (check-keys keys)
-    (post-request
-     (xml/emit-str
-      (zip/root
-       (zip/append-child
-        (zip/xml-zip uclassify)
-        (make-xml-node :writeCalls {:writeApiKey (keys :write-key) :classifierName classifier}
-                       (make-xml-node :create {:id "Create"}))))))
-    (throw (Throwable. "API key not found"))))
+(defn create-classifier
+  "Creates a new classifier"
+  [keys classifier]
+  {:pre [(check-keys? keys)]}
+  (post-request
+   (xml/emit-str
+    (zip/root
+     (zip/append-child
+      (zip/xml-zip uclassify)
+      (make-xml-node :writeCalls
+                     {:writeApiKey (keys :write-key) :classifierName classifier}
+                     (make-xml-node :create {:id "Create"})))))))
 
 (defn add-class
   "Adds class to the existing classifier"
   [keys classifier class-name]
-  (if (check-keys keys)
-    (let [xml-elements (map #(make-xml-node :addClass
-                                            {:id (join (seq ["AddClass" %]))
-                                             :className %}) class-name)
-          write-calls (make-xml-node :writeCalls
-                                     {:writeApiKey (keys :write-key)
-                                      :classifierName classifier}
-                                     xml-elements)
-          final-xml (zip/root (zip/insert-child
-                               (zip/xml-zip uclassify)
-                               (zip/xml-zip write-calls)))]
-      (post-request
-       (xml/emit-str final-xml)))
-    (throw (Throwable. "API Key not found"))))
+  {:pre [(check-keys? keys)]}
+  (let [xml-elements (map #(make-xml-node :addClass
+                                          {:id (join (seq ["AddClass" %]))
+                                           :className %}) class-name)
+        write-calls (make-xml-node :writeCalls
+                                   {:writeApiKey (keys :write-key)
+                                    :classifierName classifier}
+                                   xml-elements)
+        final-xml (zip/root (zip/insert-child
+                             (zip/xml-zip uclassify)
+                             (zip/xml-zip write-calls)))]
+    (post-request
+     (xml/emit-str final-xml))))
 
 (defn remove-classifier
   "Removes pre-existing classifier"
   [keys classifier]
-  (if (check-keys keys)
-    (post-request
-     (xml/emit-str
-      (zip/root
-       (zip/append-child
-        (zip/xml-zip uclassify)
-        (make-xml-node :writeCalls {:writeApiKey (keys :write-key) :classifierName classifier}
-                       (make-xml-node :remove {:id "Remove"}))))))
-    (throw (Throwable. "API key not found"))))
+  {:pre [(check-keys? keys)]}
+  (post-request
+   (xml/emit-str
+    (zip/root
+     (zip/append-child
+      (zip/xml-zip uclassify)
+      (make-xml-node :writeCalls {:writeApiKey (keys :write-key) :classifierName classifier}
+                     (make-xml-node :remove {:id "Remove"})))))))
+
 
 (defn remove-class
   "Removes class from the existing classifier"
   [keys classifier class-name]
-  (if (check-keys keys)
-    (let [xml-elements (map #(make-xml-node :removeClass
-                                            {:id (join (seq ["RemoveClass" %]))
-                                             :className %}) class-name)
-          write-calls (make-xml-node :writeCalls
-                                     {:writeApiKey (keys :write-key)
-                                      :classifierName classifier}
-                                     xml-elements)
-          final-xml (zip/root (zip/insert-child
-                               (zip/xml-zip uclassify)
-                               (zip/xml-zip write-calls)))]
-      (post-request
-       (xml/emit-str final-xml)))
-    (throw (Throwable. "API Key not found"))))
+  {:pre [(check-keys? keys)]}
+  (let [xml-elements (map #(make-xml-node :removeClass
+                                          {:id (join (seq ["RemoveClass" %]))
+                                           :className %}) class-name)
+        write-calls (make-xml-node :writeCalls
+                                   {:writeApiKey (keys :write-key)
+                                    :classifierName classifier}
+                                   xml-elements)
+        final-xml (zip/root (zip/insert-child
+                             (zip/xml-zip uclassify)
+                             (zip/xml-zip write-calls)))]
+    (post-request
+     (xml/emit-str final-xml))))
 
 (defn get-information
   "Returns information about the classifier."
   [keys classifier]
+  {:pre [(check-keys? keys)]}
   (let [info-tag (make-xml-node :getInformation
                                 {:id "GetInformation"
                                  :classifierName classifier})
         read-calls (make-xml-node :readCalls
-                                     {:readApiKey (keys :read-key)}
-                                     info-tag)
+                                  {:readApiKey (keys :read-key)}
+                                  info-tag)
         final-xml (zip/root (zip/insert-child
                              (zip/xml-zip uclassify)
                              (zip/xml-zip read-calls)))
@@ -97,16 +98,17 @@
               (x/xml-> uclassify-response
                        :readCalls :getInformation :classes
                        :classInformation :totalCount x/text)
-        ))
-      false ;Will never reach here
+              ))
+      false                             ;Will never reach here
       )))
 
 (defn train
   "Trains the classifier on text for a specified class"
   [keys texts class-name classifier]
+  {:pre [(check-keys? keys)]}
   (let [textbase64-tag (map #(make-xml-node :textBase64
-                                       {:id (str "Text" (str (index-of % texts)))}
-                                       (String. (encode (.getBytes %)) )) texts)
+                                            {:id (str "Text" (str (index-of % texts)))}
+                                            (String. (encode (.getBytes %)) )) texts)
         train-tag (map #(make-xml-node :train
                                        {:id (str "Train" %) :className class-name
                                         :textId (str "Text" %) })
@@ -122,9 +124,10 @@
 (defn untrain
   "Trains the classifier on text for a specified class"
   [keys texts class-name classifier]
+  {:pre [(check-keys? keys)]}
   (let [textbase64-tag (map #(make-xml-node :textBase64
-                                       {:id (str "Text" (str (index-of % texts)))}
-                                       (String. (encode (.getBytes %)) )) texts)
+                                            {:id (str "Text" (str (index-of % texts)))}
+                                            (String. (encode (.getBytes %)) )) texts)
         train-tag (map #(make-xml-node :untrain
                                        {:id (str "Untrain" %) :className class-name
                                         :textId (str "Text" %) })
@@ -138,6 +141,8 @@
       (xml-append-elements uclassify (list texts-tag write-calls))))))
 
 (defn- readable-list
+  "Rearranges the data structure properly for
+   consumption."
   [classify-list]
   (let [len (/ (count (second classify-list)) (count (first classify-list)))]
     (cons (first classify-list)
@@ -146,9 +151,10 @@
 (defn classify
   "Sends a text to a classifier and returns a classification"
   [keys texts classifier & user-name]
+  {:pre [(check-keys? keys)]}
   (let [textbase64-tag (map #(make-xml-node :textBase64
-                                       {:id (str "Text" (str (index-of % texts)))}
-                                       (String. (encode (.getBytes %)) )) texts)
+                                            {:id (str "Text" (str (index-of % texts)))}
+                                            (String. (encode (.getBytes %)) )) texts)
         texts-tag (make-xml-node :texts {} textbase64-tag)
         user-attribute (if (> (count user-name) 0)
                          { :username (first user-name) })
@@ -166,8 +172,8 @@
                                              :username (first user-name)})
                             (range (count texts))))
         read-calls (make-xml-node :readCalls
-                                     {:readApiKey (keys :read-key)}
-                                     classify-tag)
+                                  {:readApiKey (keys :read-key)}
+                                  classify-tag)
         uclassify-response (raw-post-request
                             (xml/emit-str
                              (xml-append-elements uclassify
@@ -188,16 +194,17 @@
                       :readCalls :classify
                       :classification :class
                       (x/attr :p)))))
-       false ;; Will never reach here
-       )))
+      false ;; Will never reach here
+      )))
 
 (defn classify-keywords
   "Sends a text to a classifier and returns a classification and
    relevant keywords for each class"
   [keys texts classifier & user-name]
+  {:pre [(check-keys? keys)]}
   (let [textbase64-tag (map #(make-xml-node :textBase64
-                                       {:id (str "Text" (str (index-of % texts)))}
-                                       (String. (encode (.getBytes %)) )) texts)
+                                            {:id (str "Text" (str (index-of % texts)))}
+                                            (String. (encode (.getBytes %)) )) texts)
         texts-tag (make-xml-node :texts {} textbase64-tag)
         user-attribute (if (> (count user-name) 0)
                          { :username (first user-name) })
@@ -215,8 +222,8 @@
                                              :username (first user-name)})
                             (range (count texts))))
         read-calls (make-xml-node :readCalls
-                                     {:readApiKey (keys :read-key)}
-                                     classify-tag)
+                                  {:readApiKey (keys :read-key)}
+                                  classify-tag)
         uclassify-response (raw-post-request
                             (xml/emit-str
                              (xml-append-elements uclassify
@@ -240,5 +247,5 @@
              (x/xml-> uclassify-response
                       :readCalls :classifyKeywords
                       :keywords :class x/text))))
-      false
+      false                             ;Will never reach here
       )))
