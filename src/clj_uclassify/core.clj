@@ -5,7 +5,7 @@
             [clojure.java.io :as io]
             [clojure.data.zip.xml :as x]))
 
-(defn check-keys
+(defn check-keys?
   "Checks for key, if nil throw exception"
   [{rkey :read-key wkey :write-key}]
   (let [keys (list rkey wkey)]
