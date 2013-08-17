@@ -2,11 +2,24 @@
 
 A Clojure uClassify API library.
 
-Currently in development stage.
+This library completely supports all the operations provided by their
+web service.
 
-## Usage
+## What is uClassify
 
-Not reached that stage yet!
+[uClassify](http://www.uclassify.com/) is a free web service where you
+can easily create your own text classifiers. You can also directly use
+classifiers that are shared by the community.
+
+## API Usage Documentation and Examples
+
+See
+[here](https://github.com/psibi/clj-uclassify/blob/master/doc/intro.md)
+
+## Bug Report
+
+Issue it [here](https://github.com/psibi/clj-uclassify/issues). Bug
+reports with test cases will be highly useful. 
 
 ## License
 
