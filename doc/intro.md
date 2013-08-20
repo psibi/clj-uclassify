@@ -6,6 +6,7 @@ functions:
 * create-classifier : For creating new classifiers
 * add-class : For adding new classes in the classifiers
 * remove-class : For removing existing classes in the classifiers
+* remove-classifier: For removing existing classifier
 * train : To train the classifier on a text for a specified class
 * untrain : To untrain the classifier on a text for a specified class
 * get-information : Gets information about the classifier
@@ -51,6 +52,12 @@ classifier named *sample-classifier*.
 
 The above call will remove classes *class1* and *class2* for the
 classifier named *sample-classifier*.
+
+### remove-classifier
+
+`(remove-classifier api-keys "existing-classifier")`
+
+The above call will remove the entire classifier *existing-classifier*. 
 
 ### train
 
