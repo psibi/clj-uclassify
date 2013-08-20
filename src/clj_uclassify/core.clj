@@ -72,3 +72,11 @@
 
 (defn index-of [item coll]
   (count (take-while (partial not= item) coll)))
+
+(defn readable-list
+  "Rearranges the data structure properly for
+   consumption."
+  [classify-list]
+  (let [len (/ (count (second classify-list)) (count (first classify-list)))]
+    (cons (first classify-list)
+          (partition len (second classify-list)))))
