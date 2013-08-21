@@ -1,3 +1,25 @@
+;; Copyright (C) 2013 Sibi <sibi@psibi.in>
+
+;; This file is part of clj-uclassify.
+
+;; clj-uclassify program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; clj-uclassify program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; clj-uclassify program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTYwithout even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with clj-uclassify.  If not, see <http://www.gnu.org/licenses/>.
+
 (ns #^{:doc "Core of clj-uclassify. This namespace is used by the
              API files. It doesn't provide anything useful to users."}
     clj-uclassify.core
